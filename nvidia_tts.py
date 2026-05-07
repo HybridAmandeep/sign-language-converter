@@ -41,14 +41,14 @@ except ImportError:
 # ─── CONFIGURATION ──────────────────────────────────────────────────────────
 NVIDIA_API_KEY = os.environ.get(
     "NVIDIA_API_KEY",
-    "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"
+    "****"
 )
 
 NVIDIA_GRPC_URL = "grpc.nvcf.nvidia.com:443"
 
 # Function ID for Magpie TTS Multilingual on NVCF
 # Found on https://build.nvidia.com/nvidia/magpie-tts-multilingual
-NVCF_FUNCTION_ID = "877104f7-e885-42b9-8de8-f6e4c6303969"
+NVCF_FUNCTION_ID = "*****"
 
 # Available voices
 VOICES = {
