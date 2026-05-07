@@ -11,17 +11,15 @@ Supports both:
 - 🖥️ Desktop Application
 - 🌐 Mobile-Friendly Web Dashboard
 
----
 
 📸 Preview
 
-## Desktop Application
+Desktop Application
 ![Desktop UI](docs/desktop_screenshot.png)
 
-## Web Dashboard
+Web Dashboard
 ![Web Dashboard](docs/web_dashboard.png)
 
----
 
 ✨ Features
 
