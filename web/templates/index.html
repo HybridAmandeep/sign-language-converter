@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sign Language Translator</title>
+    <meta name="description" content="A communication system that converts sign language to text and speech in real-time using AI.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+    <!-- ─── AMBIENT GLOW EFFECTS ──────────────────────────── -->
+    <div class="ambient-glow glow-1"></div>
+    <div class="ambient-glow glow-2"></div>
+    <div class="ambient-glow glow-3"></div>
+    <div class="scan-line"></div>
+
+    <!-- ─── HEADER ─────────────────────────────────────────── -->
+    <header class="header" id="mainHeader">
+        <div class="header-left">
+            <div class="logo-container">
+                <div class="logo-ring"></div>
+                <span class="logo-icon">🧠</span>
+            </div>
+            <div class="header-title">
+                <h1>Sign Language Translator</h1>
+                <span class="header-subtitle">Real-time translation</span>
+            </div>
+        </div>
+        <div class="header-center">
+            <div class="hand-badges">
+                <div class="hand-badge left-badge" id="leftHandBadge">
+                    <span class="badge-icon">🤚</span>
+                    <span class="badge-label">Left</span>
+                </div>
+                <div class="hand-badge right-badge" id="rightHandBadge">
+                    <span class="badge-icon">✋</span>
+                    <span class="badge-label">Right</span>
+                </div>
+            </div>
+        </div>
+        <div class="header-right">
+            <div class="system-stats">
+                <div class="stat-item">
+                    <span class="stat-label">FPS</span>
+                    <span class="stat-value" id="fpsValue">--</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-label">MODEL</span>
+                    <span class="stat-value model-indicator" id="modelStatus">...</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-label">TTS</span>
+                    <span class="stat-value tts-indicator" id="ttsEngineLabel" title="Text-to-Speech Engine">...</span>
+                </div>
+            </div>
+            <div class="status-indicator" id="statusIndicator">
+                <span class="status-pulse"></span>
+                <span class="status-label" id="statusLabel">Connecting</span>
+            </div>
+        </div>
+    </header>
+
+    <!-- ─── MAIN DASHBOARD ─────────────────────────────────── -->
+    <main class="dashboard" id="mainDashboard">
+
+        <!-- ═══ LEFT COLUMN: Camera + Detection ═══ -->
+        <div class="col-left">
+            <!-- Camera Feed -->
+            <section class="card camera-card" id="cameraCard">
+                <div class="card-hdr">
+                    <div class="card-title">
+                        <span class="card-icon">📡</span>
+                        <h2>Live Feed</h2>
+                    </div>
+                    <div class="card-actions">
+                        <button class="icon-btn" id="btnSwitchCamera" title="Switch Camera" style="margin-right: 10px;">
+                            <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+                                <path d="M12.6666 8.00004C12.6666 10.5774 10.5773 12.6667 7.99998 12.6667C6.01525 12.6667 4.32135 11.42 3.63318 9.66671M3.33331 8.00004C3.33331 5.42271 5.42265 3.33337 7.99998 3.33337C9.98471 3.33337 11.6786 4.58004 12.3668 6.33337" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+                                <path d="M10.6666 6.33337H12.6666V4.33337M5.33331 9.66671H3.33331V11.6667" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                            </svg>
+                        </button>
+                        <span class="hands-count" id="handsCount">0 hands</span>
+                    </div>
+                </div>
+                <div class="video-wrap">
+                    <img src="/video_feed" alt="Live Camera Feed" id="videoFeed" class="video-feed">
+                    <div class="video-overlay-top">
+                        <span class="rec-dot"></span>
+                        <span class="rec-label">LIVE</span>
+                    </div>
+                    <div class="video-overlay-bottom" id="videoOverlayBottom">
+                        <span class="overlay-text" id="handStatusText">Waiting for hands...</span>
+                    </div>
+                    <!-- Corner brackets for sci-fi effect -->
+                    <div class="corner-bracket tl"></div>
+                    <div class="corner-bracket tr"></div>
+                    <div class="corner-bracket bl"></div>
+                    <div class="corner-bracket br"></div>
+                </div>
+            </section>
+
+            <!-- Detected Letter -->
+            <section class="card letter-card" id="letterCard">
+                <div class="card-hdr">
+                    <div class="card-title">
+                        <span class="card-icon">⚡</span>
+                        <h2>Detected Sign</h2>
+                    </div>
+                    <div class="mode-toggle-group">
+                        <button class="mode-btn active" id="btnWordMode" title="Detect whole words">WORD</button>
+                        <button class="mode-btn" id="btnLetterMode" title="Detect individual letters">ABC</button>
+                        <span class="confidence-pill" id="confidencePill">0%</span>
+                    </div>
+                </div>
+                <div class="letter-hero">
+                    <div class="letter-glow" id="letterGlow"></div>
+                    <span class="letter-char" id="letterChar">—</span>
+                </div>
+                <div class="confidence-track">
+                    <div class="confidence-fill" id="confidenceFill"></div>
+                </div>
+            </section>
+        </div>
+
+        <!-- ═══ CENTER COLUMN: Chat / Communication ═══ -->
+        <div class="col-center">
+            <!-- Chat Messages -->
+            <section class="card chat-card" id="chatCard">
+                <div class="card-hdr">
+                    <div class="card-title">
+                        <span class="card-icon">💬</span>
+                        <h2>Communication</h2>
+                    </div>
+                    <button class="icon-btn" id="btnClearChat" title="Clear chat">
+                        <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+                            <path d="M4 4l8 8M12 4l-8 8" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+                        </svg>
+                    </button>
+                </div>
+                <div class="chat-messages" id="chatMessages">
+                    <div class="chat-empty" id="chatEmpty">
+                        <div class="chat-empty-icon">🧠</div>
+                        <p>Your messages will appear here</p>
+                        <span>Sign a letter → Build words → Send to speak</span>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Sentence Composer -->
+            <section class="card composer-card" id="composerCard">
+                <div class="card-hdr">
+                    <div class="card-title">
+                        <span class="card-icon">✍️</span>
+                        <h2>Compose</h2>
+                    </div>
+                    <div class="composer-controls">
+                        <div class="voice-selector-wrap" id="voiceSelectorWrap">
+                            <select class="voice-selector" id="voiceSelector" title="Select TTS voice">
+                                <option value="aria">Aria (English)</option>
+                            </select>
+                        </div>
+                        <div class="auto-speak-toggle" id="autoSpeakToggle" title="Auto-speak when sending">
+                            <span class="toggle-label">Auto-Speak</span>
+                            <div class="toggle-switch active" id="toggleSwitch">
+                                <div class="toggle-knob"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="composer-input" id="composerInput">
+                    <span class="composer-text" id="composerText"></span>
+                    <span class="composer-cursor"></span>
+                </div>
+                <div class="suggestions-bar" id="suggestionsBar">
+                    <!-- Word suggestions will appear here -->
+                </div>
+                <div class="composer-actions">
+                    <button class="action-btn space-btn" id="btnSpace">
+                        <span class="btn-icon">⎵</span>
+                        <span class="btn-label">Space</span>
+                    </button>
+                    <button class="action-btn delete-btn" id="btnDelete">
+                        <span class="btn-icon">⌫</span>
+                        <span class="btn-label">Delete</span>
+                    </button>
+                    <button class="action-btn clear-btn" id="btnClear">
+                        <span class="btn-icon">✕</span>
+                        <span class="btn-label">Clear</span>
+                    </button>
+                    <button class="action-btn send-btn" id="btnSend">
+                        <span class="btn-icon">🔊</span>
+                        <span class="btn-label">Send & Speak</span>
+                    </button>
+                </div>
+            </section>
+        </div>
+
+        <!-- ═══ RIGHT COLUMN: Quick Phrases + History ═══ -->
+        <div class="col-right">
+            <!-- Quick Phrases -->
+            <section class="card phrases-card" id="phrasesCard">
+                <div class="card-hdr">
+                    <div class="card-title">
+                        <span class="card-icon">⚡</span>
+                        <h2>Quick Phrases</h2>
+                    </div>
+                </div>
+                <div class="phrases-grid" id="phrasesGrid">
+                    <button class="phrase-btn" data-phrase="Hello">👋 Hello</button>
+                    <button class="phrase-btn" data-phrase="Thank you">🙏 Thank you</button>
+                    <button class="phrase-btn" data-phrase="Yes">✅ Yes</button>
+                    <button class="phrase-btn" data-phrase="No">❌ No</button>
+                    <button class="phrase-btn" data-phrase="Please help me">🆘 Help me</button>
+                    <button class="phrase-btn" data-phrase="I need water">💧 Water</button>
+                    <button class="phrase-btn" data-phrase="I am hungry">🍽️ Hungry</button>
+                    <button class="phrase-btn" data-phrase="I feel pain">🩹 Pain</button>
+                    <button class="phrase-btn" data-phrase="Good morning">🌅 Good morning</button>
+                    <button class="phrase-btn" data-phrase="Good night">🌙 Good night</button>
+                    <button class="phrase-btn" data-phrase="I love you">❤️ I love you</button>
+                    <button class="phrase-btn" data-phrase="How are you?">🤗 How are you?</button>
+                </div>
+            </section>
+
+            <!-- Detection History -->
+            <section class="card history-card" id="historyCard">
+                <div class="card-hdr">
+                    <div class="card-title">
+                        <span class="card-icon">📊</span>
+                        <h2>Detection Log</h2>
+                    </div>
+                    <span class="history-count" id="historyCount">0</span>
+                </div>
+                <div class="history-list" id="historyList">
+                    <p class="history-empty">Detections will appear here...</p>
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <!-- ─── SPEAKING OVERLAY ───────────────────────────────── -->
+    <div class="speaking-overlay" id="speakingOverlay">
+        <div class="speaking-content">
+            <div class="wave-container">
+                <div class="wave-bar"></div>
+                <div class="wave-bar"></div>
+                <div class="wave-bar"></div>
+                <div class="wave-bar"></div>
+                <div class="wave-bar"></div>
+                <div class="wave-bar"></div>
+                <div class="wave-bar"></div>
+            </div>
+            <span class="speaking-text" id="speakingText">Speaking...</span>
+        </div>
+    </div>
+
+    <script src="/static/script.js"></script>
+</body>
+</html>
