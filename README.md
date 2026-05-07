@@ -1,5 +1,5 @@
 ````md
-# 🤟 Sign Language Converter
+🤟 Sign Language Converter
 
 A real-time **Sign Language to Text & Speech Converter** built using **Python, MediaPipe, TensorFlow, Flask, and OpenCV**.
 
@@ -10,19 +10,18 @@ Supports both:
 - 🖥️ Desktop Application
 - 🌐 Mobile-Friendly Web Dashboard
 
----
 
-# 📸 Preview
+📸 Preview
 
-## Desktop Application
+Desktop Application
 ![Desktop UI](docs/desktop_screenshot.png)
 
-## Web Dashboard
+Web Dashboard
 ![Web Dashboard](docs/web_dashboard.png)
 
 ---
 
-# ✨ Features
+✨ Features
 
 - 🎥 Real-time webcam hand tracking
 - ✋ Hand landmark detection using MediaPipe
@@ -34,9 +33,8 @@ Supports both:
 - 🎨 Modern glassmorphism UI
 - ⚡ Fast real-time predictions
 
----
 
-# 🛠️ Tech Stack
+🛠️ Tech Stack
 
 | Category | Technology |
 |----------|-------------|
@@ -47,11 +45,9 @@ Supports both:
 | Frontend | HTML, CSS, JavaScript |
 | Text-to-Speech | pyttsx3 |
 
----
 
-# 📂 Project Structure
+📂 Project Structure
 
-```bash
 sign-language-converter/
 │
 ├── app.py
@@ -70,15 +66,13 @@ sign-language-converter/
 │   └── templates/
 │
 └── README.md
-````
 
----
 
-# 🚀 Installation & Setup
+🚀 Installation & Setup
 
-## 1️⃣ Clone Repository
+1️⃣ Clone Repository
 
-```bash
+bash
 git clone https://github.com/HybridAmandeep/sign-language-converter.git
 cd sign-language-converter
 ```
