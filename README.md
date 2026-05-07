@@ -2,7 +2,7 @@
 ````md
 🤟 Sign Language Converter
 
-A real-time **Sign Language to Text & Speech Converter** built using **Python, MediaPipe, TensorFlow, Flask, and OpenCV**.
+A real-time **Sign Language to Text & Speech Converter** built using Python, MediaPipe, TensorFlow, Flask, and OpenCV.
 
 The application detects hand gestures through a webcam, predicts alphabet signs using a trained Machine Learning model, converts them into text, and can also speak the generated sentence aloud.
 
