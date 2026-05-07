@@ -1,4 +1,3 @@
-Here’s a cleaner, more professional, and GitHub-ready version of your README.md with improved formatting, better structure, fixed image paths, and stronger presentation.
 
 ````md
 🤟 Sign Language Converter
